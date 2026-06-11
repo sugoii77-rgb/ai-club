@@ -6,7 +6,9 @@ export default function HeroSection() {
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-12 px-6 pb-20 pt-28 lg:flex-row lg:items-center lg:gap-16 lg:pt-36">
         {/* left: copy */}
         <div className="flex-1 text-center lg:text-left">
-          <span className="tag mb-6 inline-block">AI Creator Community</span>
+          <span className="tag mb-6 inline-block">
+            FCM 영천 AI 탐험대 — 오늘도, 함께 탐험!
+          </span>
           <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
             AI가 바라보는
             <br />

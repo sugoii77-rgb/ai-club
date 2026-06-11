@@ -13,7 +13,7 @@ export default function About() {
   return (
     <section id="about" className="mx-auto max-w-6xl px-6 py-24">
       <h2 className="section-title">
-        About <span className="gradient-text">AI Club</span>
+        About <span className="gradient-text">FCM 영천 AI 탐험대</span>
       </h2>
       <div className="mt-8 grid gap-8 lg:grid-cols-[1.4fr_1fr]">
         <p className="text-lg leading-relaxed text-slate-300">

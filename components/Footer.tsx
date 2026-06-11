@@ -4,11 +4,11 @@ export default function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-12 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-lg font-bold text-white">
-            AI <span className="gradient-text">Club</span>
+            FCM <span className="gradient-text">영천 AI 탐험대</span>
           </p>
           <p className="mt-1 max-w-sm text-sm text-slate-400">
-            AI를 배우는 사람들의 실험실. 하루 하나의 AI Workflow, 함께 만들고
-            공유합니다.
+            기술을 나누고, 생각을 연결하고, 함께 미래를 탐험하는 사람들.
+            오늘도, 함께 탐험!
           </p>
         </div>
         <div className="flex flex-col gap-2 text-sm text-slate-400 sm:text-right">
