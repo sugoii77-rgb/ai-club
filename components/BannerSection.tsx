@@ -1,45 +1,32 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import fs from "fs/promises";
+import path from "path";
 
 interface BannerData {
   image_url: string;
   description: string;
 }
 
-export default function BannerSection() {
-  const [bannerData, setBannerData] = useState<BannerData | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch("/data/banner.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data: BannerData) => setBannerData(data))
-      .catch((error) => {
-        console.error("Failed to fetch banner data:", error);
-        setError("Failed to load banner. Please try again later.");
-      });
-  }, []);
-
-  if (error) {
-    return (
-      <section className="py-16 bg-red-100 text-red-700 text-center">
-        <div className="container mx-auto px-4">
-          <p>{error}</p>
-        </div>
-      </section>
-    );
+async function getBannerData(): Promise<BannerData | null> {
+  try {
+    const filePath = path.join(process.cwd(), "public", "data", "banner.json");
+    const fileContents = await fs.readFile(filePath, "utf8");
+    const data: BannerData = JSON.parse(fileContents);
+    return data;
+  } catch (error) {
+    console.error("Failed to read banner data:", error);
+    return null;
   }
+}
+
+export default async function BannerSection() {
+  const bannerData = await getBannerData();
 
   if (!bannerData) {
     return (
-      <section className="py-16 bg-gray-100 text-gray-700 text-center">
+      <section className="py-16 bg-red-100 text-red-700 text-center">
         <div className="container mx-auto px-4">
-          <p>Loading banner...</p>
+          <p>Failed to load banner. Please check server logs.</p>
         </div>
       </section>
     );
