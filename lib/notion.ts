@@ -1,6 +1,3 @@
-import { Client } from "@notionhq/client";
-import { PageObjectResponse, PartialPageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
-
 interface NotionPost {
   id: string;
   title: string;
@@ -11,7 +8,7 @@ interface NotionPost {
 }
 
 export async function getNotionArchivePosts(
-  notion: Client,
+  notion: any,
   parentPageId: string
 ): Promise<NotionPost[]> {
   if (!parentPageId) {
