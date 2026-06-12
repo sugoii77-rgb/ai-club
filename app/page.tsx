@@ -1,6 +1,7 @@
 import Nav from "@/components/Nav";
 import HeroSection from "@/components/HeroSection";
 import About from "@/components/About";
+import BannerSection from "@/components/BannerSection";
 import Activities from "@/components/Activities";
 import Projects from "@/components/Projects";
 import NotionArchive from "@/components/NotionArchive";
@@ -13,6 +14,7 @@ export default function Home() {
       <Nav />
       <HeroSection />
       <About />
+      <BannerSection />
       <Activities />
       <Projects />
       <NotionArchive />
