@@ -24,10 +24,14 @@ export async function getNotionArchivePosts(): Promise<NotionPost[]> {
 
   try {
     // 1. Get child blocks of the parent page
+    console.log("Notion API Key: ", process.env.NOTION_API_KEY ? "Set" : "Not Set");
+    console.log("Notion Parent Page ID: ", NOTION_PARENT_PAGE_ID);
+
     const { results: childBlocks } = await notion.blocks.children.list({
       block_id: NOTION_PARENT_PAGE_ID,
       page_size: 100, // Adjust as needed
     });
+    console.log("Child blocks results:", JSON.stringify(childBlocks, null, 2));
 
     const posts: NotionPost[] = [];
 
@@ -37,6 +41,7 @@ export async function getNotionArchivePosts(): Promise<NotionPost[]> {
         const page = await notion.pages.retrieve({
           page_id: pageId,
         }) as PageObjectResponse;
+        console.log(`Page (ID: ${pageId}) properties:`, JSON.stringify(page.properties, null, 2));
 
         // Extract properties from the page
         const titleProperty = page.properties.title; // Assuming 'title' is the property name
@@ -59,6 +64,10 @@ export async function getNotionArchivePosts(): Promise<NotionPost[]> {
         const date = dateProperty && dateProperty.type === "date" ? dateProperty.date?.start || "No Date" : "No Date";
         const tags = tagsProperty && tagsProperty.type === "multi_select" ? getTagNames(tagsProperty.multi_select) : [];
         const url = page.url;
+
+        console.log(`Parsed post data (ID: ${pageId}):`, {
+          title, summary, date, tags, url
+        });
 
         posts.push({
           id: pageId,
