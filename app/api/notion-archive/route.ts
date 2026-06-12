@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 interface NotionPost {
   id: string;
   title: string;
@@ -36,7 +39,7 @@ export async function GET() {
 
   try {
     const response = await fetch(
-      `https://api.notion.com/v1/blocks/${notionParentPageId}/children`,
+      `https://api.notion.com/v1/blocks/${notionParentPageId}/children?page_size=100`,
       {
         method: "GET",
         headers: {
@@ -45,7 +48,7 @@ export async function GET() {
           "Content-Type": "application/json",
         },
         // Next.js API Route에서 fetch 캐싱을 비활성화 (개발 중에는 유용)
-        next: { revalidate: 1 }, // 1초마다 revalidate
+        cache: "no-store",
       }
     );
 
@@ -69,7 +72,7 @@ export async function GET() {
               "Notion-Version": "2022-06-28",
               "Content-Type": "application/json",
             },
-            next: { revalidate: 1 },
+            cache: "no-store",
           }
         );
 
