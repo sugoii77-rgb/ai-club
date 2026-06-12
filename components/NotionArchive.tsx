@@ -1,6 +1,20 @@
-import { archivePosts } from "@/lib/archive-data";
+import { getNotionArchivePosts } from "@/lib/notion";
 
-export default function NotionArchive() {
+export default async function NotionArchive() {
+  const archivePosts = await getNotionArchivePosts();
+
+  if (archivePosts.length === 0) {
+    return (
+      <section id="archive" className="mx-auto max-w-6xl px-6 py-24">
+        <div className="text-center text-red-500">
+          <p>Failed to load Notion archive posts or no posts found.</p>
+          <p>Please ensure NOTION_API_KEY and NOTION_PARENT_PAGE_ID are correctly set in .env.local and Vercel.</p>
+          <p>Also, check if AI Club Homepage Integration has read access to the '글 라이브러리' Notion page.</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section id="archive" className="mx-auto max-w-6xl px-6 py-24">
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -14,7 +28,7 @@ export default function NotionArchive() {
       <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {archivePosts.map((post) => (
           <article
-            key={post.title}
+            key={post.id}
             className="glass glass-hover flex flex-col rounded-2xl p-6"
           >
             <div className="flex flex-wrap gap-2">
@@ -31,7 +45,7 @@ export default function NotionArchive() {
               {post.summary}
             </p>
             <div className="mt-5 flex items-center justify-between">
-              <span className="text-xs text-slate-500">{post.date}</span>
+              <span className="text-xs text-slate-500">{new Date(post.date).toLocaleDateString("ko-KR")}</span>
               <a
                 href={post.url}
                 target="_blank"
