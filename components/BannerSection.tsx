@@ -40,7 +40,7 @@ export default async function BannerSection() {
             src={bannerData.image_url}
             alt="AI Club Banner"
             layout="fill"
-            objectFit="cover"
+            objectFit="contain"
             className="w-full h-full"
           />
         </div>
