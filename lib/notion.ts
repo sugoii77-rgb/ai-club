@@ -1,12 +1,6 @@
 import { Client } from "@notionhq/client";
 import { PageObjectResponse, PartialPageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
-const notion = new Client({
-  auth: process.env.NOTION_API_KEY,
-});
-
-const NOTION_PARENT_PAGE_ID = process.env.NOTION_PARENT_PAGE_ID || "";
-
 interface NotionPost {
   id: string;
   title: string;
@@ -16,8 +10,11 @@ interface NotionPost {
   url: string;
 }
 
-export async function getNotionArchivePosts(): Promise<NotionPost[]> {
-  if (!NOTION_PARENT_PAGE_ID) {
+export async function getNotionArchivePosts(
+  notion: Client,
+  parentPageId: string
+): Promise<NotionPost[]> {
+  if (!parentPageId) {
     console.error("NOTION_PARENT_PAGE_ID is not set.");
     return [];
   }
@@ -25,7 +22,7 @@ export async function getNotionArchivePosts(): Promise<NotionPost[]> {
   try {
     // 1. Get child blocks of the parent page
     const { results: childBlocks } = await notion.blocks.children.list({
-      block_id: NOTION_PARENT_PAGE_ID,
+      block_id: parentPageId,
       page_size: 100, // Adjust as needed
     });
 
