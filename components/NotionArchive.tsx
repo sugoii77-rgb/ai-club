@@ -1,15 +1,69 @@
-import { getNotionArchivePosts } from "@/lib/notion";
+"use client";
 
-export default async function NotionArchive() {
-  const archivePosts = await getNotionArchivePosts();
+import { useEffect, useState } from "react";
+
+interface NotionPost {
+  id: string;
+  title: string;
+  summary: string;
+  date: string;
+  tags: string[];
+  url: string;
+}
+
+export default function NotionArchive() {
+  const [archivePosts, setArchivePosts] = useState<NotionPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchPosts() {
+      try {
+        const response = await fetch("/api/notion-archive"); // API Route를 통해 데이터 가져오기
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: NotionPost[] = await response.json();
+        setArchivePosts(data);
+      } catch (err) {
+        console.error("Failed to fetch Notion archive posts:", err);
+        setError("Failed to load Notion archive posts. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchPosts();
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="archive" className="mx-auto max-w-6xl px-6 py-24">
+        <div className="text-center text-gray-400">
+          <p>Loading Notion archive posts...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section id="archive" className="mx-auto max-w-6xl px-6 py-24">
+        <div className="text-center text-red-500">
+          <p>{error}</p>
+          <p>Please ensure NOTION_API_KEY and NOTION_PARENT_PAGE_ID are correctly set in Vercel environment variables.</p>
+          <p>Also, check if AI Club Homepage Integration has read access to the '글 라이브러리' Notion page.</p>
+        </div>
+      </section>
+    );
+  }
 
   if (archivePosts.length === 0) {
     return (
       <section id="archive" className="mx-auto max-w-6xl px-6 py-24">
-        <div className="text-center text-red-500">
-          <p>Failed to load Notion archive posts or no posts found.</p>
-          <p>Please ensure NOTION_API_KEY and NOTION_PARENT_PAGE_ID are correctly set in .env.local and Vercel.</p>
-          <p>Also, check if AI Club Homepage Integration has read access to the '글 라이브러리' Notion page.</p>
+        <div className="text-center text-gray-400">
+          <p>No Notion archive posts found.</p>
+          <p>Please ensure your Notion '글 라이브러리' page contains child pages.</p>
         </div>
       </section>
     );
