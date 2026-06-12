@@ -4,6 +4,8 @@ const NOTION_VERSION = "2022-06-28";
 const NOTION_MEMBERS_DATABASE_ID =
   process.env.NOTION_MEMBERS_DATABASE_ID ?? "dc9c8eace8df4c8293af96a89fe9a392";
 
+export const dynamic = "force-dynamic";
+
 type NotionProperty =
   | {
       type: "title";
@@ -92,6 +94,7 @@ export async function GET() {
       {
         method: "POST",
         headers,
+        cache: "no-store",
         body: JSON.stringify({
           filter: {
             or: [

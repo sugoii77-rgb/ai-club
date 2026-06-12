@@ -4,6 +4,8 @@ const NOTION_VERSION = "2022-06-28";
 const NOTION_MEMBERS_DATABASE_ID =
   process.env.NOTION_MEMBERS_DATABASE_ID ?? "dc9c8eace8df4c8293af96a89fe9a392";
 
+export const dynamic = "force-dynamic";
+
 interface JoinPayload {
   name?: unknown;
   email?: unknown;
@@ -42,6 +44,7 @@ async function hasDuplicateEmail(normalizedEmail: string) {
     {
       method: "POST",
       headers,
+      cache: "no-store",
       body: JSON.stringify({
         filter: {
           property: "Email",
@@ -80,6 +83,7 @@ async function createMemberPage({
   const response = await fetch("https://api.notion.com/v1/pages", {
     method: "POST",
     headers,
+    cache: "no-store",
     body: JSON.stringify({
       parent: {
         database_id: NOTION_MEMBERS_DATABASE_ID,

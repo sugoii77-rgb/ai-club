@@ -41,7 +41,7 @@ export default function MembersDisplay() {
 
     async function loadMembers() {
       try {
-        const response = await fetch("/api/members");
+        const response = await fetch("/api/members", { cache: "no-store" });
 
         if (!response.ok) {
           throw new Error("failed");
