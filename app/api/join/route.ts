@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 // 회원가입 API (현재 mock).
 // 나중에 저장소만 바꿔 끼우면 됩니다:
 //  - Google Sheet: https://developers.google.com/sheets/api (또는 Apps Script 웹훅)
-//  - Notion DB:    @notionhq/client 의 pages.create({ parent: { database_id } })
+//  - Notion DB:    Notion SDK의 pages.create({ parent: { database_id } })
 //  - Supabase:     @supabase/supabase-js 의 from("members").insert(...)
 // 환경변수(NOTION_TOKEN 등)는 Vercel 프로젝트 설정에 추가하세요.
 

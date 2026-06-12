@@ -64,7 +64,7 @@ public/avatar/        # 얼굴 추적 아바타 엔진 (Three.js + MediaPipe)
 **Notion DB**
 
 ```ts
-import { Client } from "@notionhq/client";
+
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 await notion.pages.create({
   parent: { database_id: process.env.NOTION_DB_ID! },
@@ -91,4 +91,4 @@ await supabase.from("members").insert({ name, email, interest });
 ## Notion Archive 연동 (현재 mock)
 
 `lib/archive-data.ts`의 배열을 수정하면 카드가 바뀝니다.
-실제 Notion 연동 시 `@notionhq/client`로 데이터베이스를 query해서 같은 형태(`title/summary/tags/url/date`)로 매핑하면 됩니다. 당장은 각 항목의 `url`에 공개된 Notion 페이지 링크를 넣는 것만으로 충분합니다.
+실제 Notion 연동 시 Notion SDK로 데이터베이스를 query해서 같은 형태(`title/summary/tags/url/date`)로 매핑하면 됩니다. 당장은 각 항목의 `url`에 공개된 Notion 페이지 링크를 넣는 것만으로 충분합니다.

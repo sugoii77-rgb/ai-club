@@ -1,0 +1,47 @@
+
+> ai-club@1.0.0 build
+> next build
+
+  ??Next.js 14.2.5
+  - Environments: .env.local
+
+   Creating an optimized production build ...
+ ??Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+   Generating static pages (0/8) ...
+   Generating static pages (2/8) 
+API Route - Notion API Key:  Set
+API Route - Notion Parent Page ID:  cfed40273ec6411c9735d22d2930c4de
+   Generating static pages (4/8) 
+   Generating static pages (6/8) 
+ ??Generating static pages (8/8)
+API Route - Error in /api/notion-archive: Error: Notion API error! status: 401 - {"object":"error","status":401,"code":"unauthorized","message":"API token is invalid.","request_id":"edd38486-4587-44cc-a164-7af5e2bf9901"}
+    at u (C:\Users\sugoi\.openclaw\workspace\ai-club\.next\server\app\api\notion-archive\route.js:1:1170)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async C:\Users\sugoi\.openclaw\workspace\ai-club\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:36258
+    at async eR.execute (C:\Users\sugoi\.openclaw\workspace\ai-club\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:26874)
+    at async eR.handle (C:\Users\sugoi\.openclaw\workspace\ai-club\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:37512)
+    at async exportAppRoute (C:\Users\sugoi\.openclaw\workspace\ai-club\node_modules\next\dist\export\routes\app-route.js:77:26)
+    at async exportPageImpl (C:\Users\sugoi\.openclaw\workspace\ai-club\node_modules\next\dist\export\worker.js:175:20)
+    at async Span.traceAsyncFn (C:\Users\sugoi\.openclaw\workspace\ai-club\node_modules\next\dist\trace\trace.js:154:20)
+    at async Object.exportPage (C:\Users\sugoi\.openclaw\workspace\ai-club\node_modules\next\dist\export\worker.js:236:20)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+????/                                    9.01 kB         103 kB
+????/_not-found                          871 B          87.9 kB
+??? /api/join                            0 B                0 B
+??? /api/notion-archive                  0 B                0 B
+??? /api/posts                           0 B                0 B
+????/board                               2.87 kB        96.7 kB
++ First Load JS shared by all            87.1 kB
+  ??chunks/23-f6cd52305faafa0e.js        31.5 kB
+  ??chunks/fd9d1056-23bdddb1df3a91c8.js  53.6 kB
+  ??other shared chunks (total)          1.89 kB
+
+
+?? (Static)   prerendered as static content
+?  (Dynamic)  server-rendered on demand
+

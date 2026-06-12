@@ -1,6 +1,23 @@
-import { Client } from "@notionhq/client";
-import { getNotionArchivePosts } from "@/lib/notion";
 import { NextResponse } from "next/server";
+
+interface NotionPost {
+  id: string;
+  title: string;
+  summary: string;
+  date: string;
+  tags: string[];
+  url: string;
+}
+
+// Helper to get plain text from Notion rich text property
+const getPlainText = (richTextArr: any[]) => {
+  return richTextArr.map((t) => t.plain_text).join("");
+};
+
+// Helper to get multi-select tag names
+const getTagNames = (multiSelectArr: any[]) => {
+  return multiSelectArr.map((tag: { name: string }) => tag.name);
+};
 
 export async function GET() {
   const notionApiKey = process.env.NOTION_API_KEY;
@@ -17,13 +34,75 @@ export async function GET() {
     );
   }
 
-  const notion = new Client({
-    auth: notionApiKey,
-  });
-
   try {
-    const posts = await getNotionArchivePosts(notion, notionParentPageId);
-    console.log("API Route - Fetched posts:", JSON.stringify(posts, null, 2));
+    const response = await fetch(
+      `https://api.notion.com/v1/blocks/${notionParentPageId}/children`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${notionApiKey}`,
+          "Notion-Version": "2022-06-28", // Notion API 버전
+          "Content-Type": "application/json",
+        },
+        // Next.js API Route에서 fetch 캐싱을 비활성화 (개발 중에는 유용)
+        next: { revalidate: 1 }, // 1초마다 revalidate
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Notion API error! status: ${response.status} - ${await response.text()}`);
+    }
+
+    const data = await response.json();
+    console.log("API Route - Child blocks raw data:", JSON.stringify(data, null, 2));
+
+    const posts: NotionPost[] = [];
+
+    for (const block of data.results) {
+      if (block.type === "child_page") {
+        const pageId = block.id;
+        const pageResponse = await fetch(`https://api.notion.com/v1/pages/${pageId}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${notionApiKey}`,
+              "Notion-Version": "2022-06-28",
+              "Content-Type": "application/json",
+            },
+            next: { revalidate: 1 },
+          }
+        );
+
+        if (!pageResponse.ok) {
+          console.warn(`Failed to retrieve page (ID: ${pageId}): ${pageResponse.status} - ${await pageResponse.text()}`);
+          continue; // 다음 페이지로 넘어감
+        }
+
+        const page = await pageResponse.json();
+        console.log(`API Route - Page (ID: ${pageId}) properties:`, JSON.stringify(page.properties, null, 2));
+
+        const titleProperty = page.properties.title; // Assuming 'title' is the property name
+        const summaryProperty = page.properties.Summary; // Assuming 'Summary' is the property name
+        const dateProperty = page.properties.Date; // Assuming 'Date' is the property name
+        const tagsProperty = page.properties.Tags; // Assuming 'Tags' is the property name
+
+        const title = titleProperty && titleProperty.type === "title" ? getPlainText(titleProperty.title) : "No Title";
+        const summary = summaryProperty && summaryProperty.type === "rich_text" ? getPlainText(summaryProperty.rich_text) : "No Summary";
+        const date = dateProperty && dateProperty.type === "date" ? dateProperty.date?.start || "No Date" : "No Date";
+        const tags = tagsProperty && tagsProperty.type === "multi_select" ? getTagNames(tagsProperty.multi_select) : [];
+        const url = page.url;
+
+        posts.push({
+          id: pageId,
+          title,
+          summary,
+          date,
+          tags,
+          url,
+        });
+      }
+    }
+    console.log("API Route - Final fetched posts:", JSON.stringify(posts, null, 2));
     return NextResponse.json(posts);
   } catch (error) {
     console.error("API Route - Error in /api/notion-archive:", error);
