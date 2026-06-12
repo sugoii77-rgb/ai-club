@@ -1,3 +1,5 @@
+"use server";
+
 import { Client } from "@notionhq/client";
 import { PageObjectResponse, PartialPageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
