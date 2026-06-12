@@ -33,16 +33,18 @@ export default async function BannerSection() {
   }
 
   return (
-    <section className="py-8 bg-gray-50">
+    <section className="py-8 bg-zinc-900">
       <div className="container mx-auto px-4">
         <div className="relative w-full h-64 md:h-96 overflow-hidden rounded-lg shadow-lg">
-          <Image
-            src={bannerData.image_url}
-            alt="AI Club Banner"
-            layout="fill"
-            objectFit="contain"
-            className="w-full h-full"
-          />
+          <a href={bannerData.image_url} target="_blank" rel="noopener noreferrer">
+            <Image
+              src={bannerData.image_url}
+              alt="AI Club Banner"
+              layout="fill"
+              objectFit="contain"
+              className="w-full h-full"
+            />
+          </a>
         </div>
         <p className="mt-4 text-center text-lg md:text-xl font-semibold text-gray-800">
           {bannerData.description}
