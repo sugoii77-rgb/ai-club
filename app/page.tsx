@@ -6,6 +6,7 @@ import Activities from "@/components/Activities";
 import Projects from "@/components/Projects";
 import NotionArchive from "@/components/NotionArchive";
 import JoinSection from "@/components/JoinSection";
+import MembersDisplay from "@/components/MembersDisplay";
 import Footer from "@/components/Footer";
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <Projects />
       <NotionArchive />
       <JoinSection />
+      <MembersDisplay />
       <Footer />
     </main>
   );

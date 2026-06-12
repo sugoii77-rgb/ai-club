@@ -1,37 +1,196 @@
 import { NextRequest, NextResponse } from "next/server";
 
-// 회원가입 API (현재 mock).
-// 나중에 저장소만 바꿔 끼우면 됩니다:
-//  - Google Sheet: https://developers.google.com/sheets/api (또는 Apps Script 웹훅)
-//  - Notion DB:    Notion SDK의 pages.create({ parent: { database_id } })
-//  - Supabase:     @supabase/supabase-js 의 from("members").insert(...)
-// 환경변수(NOTION_TOKEN 등)는 Vercel 프로젝트 설정에 추가하세요.
+const NOTION_VERSION = "2022-06-28";
+const NOTION_MEMBERS_DATABASE_ID =
+  process.env.NOTION_MEMBERS_DATABASE_ID ?? "dc9c8eace8df4c8293af96a89fe9a392";
 
 interface JoinPayload {
-  name?: string;
-  email?: string;
-  interest?: string;
+  name?: unknown;
+  email?: unknown;
+  interest?: unknown;
+}
+
+interface NotionQueryResponse {
+  results?: unknown[];
+}
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function getNotionHeaders() {
+  const notionApiKey = process.env.NOTION_API_KEY;
+
+  if (!notionApiKey) {
+    return null;
+  }
+
+  return {
+    Authorization: `Bearer ${notionApiKey}`,
+    "Content-Type": "application/json",
+    "Notion-Version": NOTION_VERSION,
+  };
+}
+
+async function hasDuplicateEmail(normalizedEmail: string) {
+  const headers = getNotionHeaders();
+
+  if (!headers) {
+    throw new Error("Notion API key is not configured.");
+  }
+
+  const response = await fetch(
+    `https://api.notion.com/v1/databases/${NOTION_MEMBERS_DATABASE_ID}/query`,
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        filter: {
+          property: "Email",
+          email: {
+            equals: normalizedEmail,
+          },
+        },
+        page_size: 1,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to query Notion members database.");
+  }
+
+  const data = (await response.json()) as NotionQueryResponse;
+  return Boolean(data.results?.length);
+}
+
+async function createMemberPage({
+  normalizedName,
+  normalizedEmail,
+  normalizedInterest,
+}: {
+  normalizedName: string;
+  normalizedEmail: string;
+  normalizedInterest: string;
+}) {
+  const headers = getNotionHeaders();
+
+  if (!headers) {
+    throw new Error("Notion API key is not configured.");
+  }
+
+  const response = await fetch("https://api.notion.com/v1/pages", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      parent: {
+        database_id: NOTION_MEMBERS_DATABASE_ID,
+      },
+      properties: {
+        Name: {
+          title: [
+            {
+              text: {
+                content: normalizedName,
+              },
+            },
+          ],
+        },
+        Email: {
+          email: normalizedEmail,
+        },
+        Interest: {
+          rich_text: [
+            {
+              text: {
+                content: normalizedInterest,
+              },
+            },
+          ],
+        },
+        Status: {
+          select: {
+            name: "pending",
+          },
+        },
+        CreatedAt: {
+          date: {
+            start: new Date().toISOString(),
+          },
+        },
+        Source: {
+          rich_text: [
+            {
+              text: {
+                content: "website",
+              },
+            },
+          ],
+        },
+        EmailSent: {
+          checkbox: false,
+        },
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to create Notion member page.");
+  }
 }
 
 export async function POST(req: NextRequest) {
   let body: JoinPayload;
+
   try {
-    body = await req.json();
+    body = (await req.json()) as JoinPayload;
   } catch {
-    return NextResponse.json({ ok: false, error: "invalid json" }, { status: 400 });
+    return NextResponse.json({ ok: false, error: "Invalid JSON." }, { status: 400 });
   }
 
-  const { name, email, interest } = body;
-  if (!name || !email || !/.+@.+\..+/.test(email)) {
+  const normalizedName = typeof body.name === "string" ? body.name.trim() : "";
+  const normalizedEmail =
+    typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
+  const normalizedInterest =
+    typeof body.interest === "string" ? body.interest.trim() : "";
+
+  if (!normalizedName || !normalizedEmail || !normalizedInterest) {
     return NextResponse.json(
-      { ok: false, error: "name and valid email required" },
+      { ok: false, error: "Name, email, and interest are required." },
       { status: 400 }
     );
   }
 
-  // TODO: 여기서 실제 저장소로 전달
-  // await saveToNotion({ name, email, interest });
-  console.log("[join]", { name, email, interest, at: new Date().toISOString() });
+  if (!emailRegex.test(normalizedEmail)) {
+    return NextResponse.json(
+      { ok: false, error: "A valid email is required." },
+      { status: 400 }
+    );
+  }
 
-  return NextResponse.json({ ok: true });
+  try {
+    const duplicate = await hasDuplicateEmail(normalizedEmail);
+
+    if (duplicate) {
+      return NextResponse.json(
+        { ok: false, error: "This email has already been submitted." },
+        { status: 409 }
+      );
+    }
+
+    await createMemberPage({
+      normalizedName,
+      normalizedEmail,
+      normalizedInterest,
+    });
+
+    return NextResponse.json({
+      ok: true,
+      message: "Your application has been submitted successfully.",
+      emailSent: false,
+    });
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Unable to submit application." },
+      { status: 500 }
+    );
+  }
 }

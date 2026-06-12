@@ -11,13 +11,15 @@ const interests = [
 ];
 
 export default function JoinSection() {
-  const [status, setStatus] = useState<"idle" | "sending" | "done" | "error">(
-    "idle"
-  );
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "done" | "duplicate" | "error"
+  >("idle");
+  const [message, setMessage] = useState("");
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setStatus("sending");
+    setMessage("");
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
     try {
@@ -26,8 +28,28 @@ export default function JoinSection() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error("failed");
+
+      const responseBody = (await res.json().catch(() => null)) as {
+        message?: string;
+        error?: string;
+      } | null;
+
+      if (res.status === 409) {
+        setStatus("duplicate");
+        setMessage(
+          responseBody?.error ?? "이미 접수된 이메일이에요. 다른 이메일을 사용해 주세요."
+        );
+        return;
+      }
+
+      if (!res.ok) {
+        throw new Error(responseBody?.error ?? "failed");
+      }
+
       setStatus("done");
+      setMessage(
+        responseBody?.message ?? "Your application has been submitted successfully."
+      );
       form.reset();
     } catch {
       setStatus("error");
@@ -63,7 +85,7 @@ export default function JoinSection() {
                 환영합니다!
               </p>
               <p className="mt-1 text-sm text-slate-300">
-                가입 신청이 접수되었어요. 곧 이메일로 안내를 보내드릴게요.
+                {message || "가입 신청이 접수되었어요. 곧 이메일로 안내를 보내드릴게요."}
               </p>
             </div>
           ) : (
@@ -103,6 +125,11 @@ export default function JoinSection() {
               >
                 {status === "sending" ? "보내는 중…" : "가입 신청하기"}
               </button>
+              {status === "duplicate" && (
+                <p className="text-sm text-amber-300">
+                  {message || "이미 접수된 이메일이에요. 다른 이메일을 사용해 주세요."}
+                </p>
+              )}
               {status === "error" && (
                 <p className="text-sm text-rose-400">
                   전송에 실패했어요. 잠시 후 다시 시도해 주세요.
