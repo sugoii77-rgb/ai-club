@@ -46,7 +46,7 @@ export default async function BannerSection() {
             />
           </a>
         </div>
-        <p className="mt-4 text-center text-lg md:text-xl font-semibold text-gray-800">
+        <p className="mt-4 text-center text-lg md:text-xl font-semibold text-white">
           {bannerData.description}
         </p>
       </div>
