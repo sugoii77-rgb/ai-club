@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSession, signOut } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Nav() {
   const { data: session, status } = useSession();
@@ -41,12 +41,12 @@ export default function Nav() {
               로그아웃
             </button>
           ) : (
-            <a
-              href="/api/auth/signin/google"
+            <button
+              onClick={() => signIn("google")}
               className="text-xs text-slate-300 transition-colors hover:text-white"
             >
               로그인
-            </a>
+            </button>
           )}
           <Link href="/#join" className="btn-primary !px-4 !py-2 text-xs">
             가입하기
