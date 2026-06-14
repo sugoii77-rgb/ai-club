@@ -13,7 +13,7 @@ const projects = [
   },
   {
     title: "Vercel 웹앱 배포",
-    desc: "얼굴 추적 AI 아바타 같은 실험작을 GitHub→Vercel로 바로 세상에 공개합니다.",
+    desc: "Vibe Coding 입문 가이드처럼 만든 앱을 GitHub→Vercel로 바로 세상에 공개합니다.",
     stack: ["Next.js", "Vercel"],
     gradient: "from-fuchsia-500/30 to-sky-500/10",
   },
@@ -25,6 +25,7 @@ const projects = [
   },
 ];
 
+
 export default function Projects() {
   return (
     <section id="projects" className="mx-auto max-w-6xl px-6 py-24">
@@ -34,33 +35,3 @@ export default function Projects() {
       <h2 className="section-title">
         <span className="gradient-text">만든 것들</span>
       </h2>
-
-      <div className="mt-10 grid gap-5 sm:grid-cols-2">
-        {projects.map((p) => (
-          <div
-            key={p.title}
-            className="glass glass-hover group relative overflow-hidden rounded-2xl p-7"
-          >
-            <div
-              className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-50 transition-opacity duration-300 group-hover:opacity-70`}
-              aria-hidden
-            />
-            <div className="relative">
-              <h3 className="text-xl font-semibold text-white">{p.title}</h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300">
-                {p.desc}
-              </p>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {p.stack.map((s) => (
-                  <span key={s} className="tag">
-                    {s}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-}
