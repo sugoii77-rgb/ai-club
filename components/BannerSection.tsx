@@ -23,32 +23,37 @@ export default async function BannerSection() {
   const bannerData = await getBannerData();
 
   if (!bannerData) {
-    return (
-      <section className="py-16 bg-red-100 text-red-700 text-center">
-        <div className="container mx-auto px-4">
-          <p>Failed to load banner. Please check server logs.</p>
-        </div>
-      </section>
-    );
+    return null;
   }
 
   return (
-    <section className="py-8 bg-zinc-900">
-      <div className="container mx-auto px-4">
-        <div className="relative w-full h-64 md:h-96 overflow-hidden rounded-lg shadow-lg">
-          <a href={bannerData.image_url} target="_blank" rel="noopener noreferrer">
-            <Image
-              src={bannerData.image_url}
-              alt="AI Club Banner"
-              layout="fill"
-              objectFit="contain"
-              className="w-full h-full"
-            />
-          </a>
+    <section className="mx-auto max-w-6xl px-6 pb-12">
+      <div className="glass relative overflow-hidden rounded-3xl">
+        {/* Poster image */}
+        <div className="relative h-64 w-full overflow-hidden md:h-[420px]">
+          <Image
+            src={bannerData.image_url}
+            alt="AI Club 포스터"
+            fill
+            className="object-contain"
+          />
+          {/* Bottom gradient for caption blending */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, transparent 55%, rgba(7,10,20,0.9) 100%)",
+            }}
+            aria-hidden
+          />
         </div>
-        <p className="mt-4 text-center text-lg md:text-xl font-semibold text-white">
-          {bannerData.description}
-        </p>
+
+        {/* Caption */}
+        {bannerData.description && (
+          <div className="px-6 py-4 border-t border-white/5">
+            <p className="text-sm text-slate-400">{bannerData.description}</p>
+          </div>
+        )}
       </div>
     </section>
   );

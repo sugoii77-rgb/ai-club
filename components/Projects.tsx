@@ -28,17 +28,21 @@ const projects = [
 export default function Projects() {
   return (
     <section id="projects" className="mx-auto max-w-6xl px-6 py-24">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-violet-400">
+        Projects
+      </p>
       <h2 className="section-title">
-        Projects — <span className="gradient-text">만든 것들</span>
+        <span className="gradient-text">만든 것들</span>
       </h2>
+
       <div className="mt-10 grid gap-5 sm:grid-cols-2">
         {projects.map((p) => (
           <div
             key={p.title}
-            className="glass glass-hover relative overflow-hidden rounded-2xl p-7"
+            className="glass glass-hover group relative overflow-hidden rounded-2xl p-7"
           >
             <div
-              className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-40`}
+              className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${p.gradient} opacity-50 transition-opacity duration-300 group-hover:opacity-70`}
               aria-hidden
             />
             <div className="relative">

@@ -59,6 +59,7 @@ export default function JoinSection() {
   return (
     <section id="join" className="mx-auto max-w-6xl px-6 py-24">
       <div className="glass relative overflow-hidden rounded-3xl p-8 sm:p-12">
+        {/* Background glow */}
         <div
           className="pointer-events-none absolute inset-0 opacity-50"
           style={{
@@ -67,8 +68,16 @@ export default function JoinSection() {
           }}
           aria-hidden
         />
+
         <div className="relative grid gap-10 lg:grid-cols-2">
+          {/* Left: description */}
           <div>
+            {/* Membership type badge */}
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-violet-500/30 bg-violet-500/10 px-3 py-1.5 text-xs font-medium text-violet-300">
+              <span>🔒</span>
+              <span>승인제 회원 커뮤니티</span>
+            </div>
+
             <h2 className="section-title">
               Join — <span className="gradient-text">같이 실험해요</span>
             </h2>
@@ -76,11 +85,25 @@ export default function JoinSection() {
               가입하면 매주 워크플로 실습 안내와 Notion 아카이브 접근 권한을
               보내드립니다. 회비도, 강매도 없습니다.
             </p>
-            <p className="mt-3 text-sm text-slate-400">
-              가입 신청 후 관리자가 승인하면 Google 계정으로 로그인하여 글을 작성할 수 있습니다.
-            </p>
+
+            {/* Approval flow steps */}
+            <div className="mt-7 space-y-3">
+              {[
+                { step: "01", label: "신청서 제출" },
+                { step: "02", label: "관리자 검토 및 승인" },
+                { step: "03", label: "Google 로그인 후 글쓰기 활성화" },
+              ].map(({ step, label }) => (
+                <div key={step} className="flex items-center gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-violet-500/30 bg-violet-500/10 text-[10px] font-bold text-violet-400">
+                    {step}
+                  </span>
+                  <span className="text-sm text-slate-300">{label}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
+          {/* Right: form */}
           {status === "done" ? (
             <div className="flex flex-col items-center justify-center rounded-2xl bg-emerald-400/10 p-8 text-center ring-1 ring-emerald-400/30">
               <span className="text-3xl">🎉</span>
@@ -97,20 +120,20 @@ export default function JoinSection() {
                 name="name"
                 required
                 placeholder="이름"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-violet-400/60"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-violet-400/60 focus:ring-1 focus:ring-violet-400/20"
               />
               <input
                 name="email"
                 type="email"
                 required
-                placeholder="이메일"
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-violet-400/60"
+                placeholder="이메일 (Google 계정 권장)"
+                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-slate-500 outline-none transition-colors focus:border-violet-400/60 focus:ring-1 focus:ring-violet-400/20"
               />
               <select
                 name="interest"
                 required
                 defaultValue=""
-                className="w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300 outline-none transition-colors focus:border-violet-400/60 [&>option]:bg-navy"
+                className="w-full rounded-xl border border-white/10 bg-[#0d1120] px-4 py-3 text-sm text-slate-300 outline-none transition-colors focus:border-violet-400/60 focus:ring-1 focus:ring-violet-400/20"
               >
                 <option value="" disabled>
                   관심 분야를 선택하세요
@@ -124,7 +147,7 @@ export default function JoinSection() {
               <button
                 type="submit"
                 disabled={status === "sending"}
-                className="btn-primary w-full disabled:opacity-60"
+                className="btn-primary w-full py-3.5 disabled:opacity-60"
               >
                 {status === "sending" ? "보내는 중…" : "가입 신청하기"}
               </button>
