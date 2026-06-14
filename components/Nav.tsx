@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { useSession, signIn, signOut } from "next-auth/react";
 
 export default function Nav() {
+  const { data: session, status } = useSession();
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-4">
       <nav className="glass mx-auto mt-4 flex max-w-6xl items-center justify-between rounded-full px-6 py-3">
@@ -23,10 +28,30 @@ export default function Nav() {
           <Link href="/board" className="transition-colors hover:text-white">
             게시판
           </Link>
+          <Link href="/write" className="transition-colors hover:text-white">
+            글쓰기
+          </Link>
         </div>
-        <Link href="/#join" className="btn-primary !px-4 !py-2 text-xs">
-          가입하기
-        </Link>
+        <div className="flex items-center gap-3">
+          {status === "loading" ? null : session ? (
+            <button
+              onClick={() => signOut()}
+              className="text-xs text-slate-400 transition-colors hover:text-white"
+            >
+              로그아웃
+            </button>
+          ) : (
+            <button
+              onClick={() => signIn("google")}
+              className="text-xs text-slate-300 transition-colors hover:text-white"
+            >
+              로그인
+            </button>
+          )}
+          <Link href="/#join" className="btn-primary !px-4 !py-2 text-xs">
+            가입하기
+          </Link>
+        </div>
       </nav>
     </header>
   );

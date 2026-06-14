@@ -76,6 +76,9 @@ export default function JoinSection() {
               가입하면 매주 워크플로 실습 안내와 Notion 아카이브 접근 권한을
               보내드립니다. 회비도, 강매도 없습니다.
             </p>
+            <p className="mt-3 text-sm text-slate-400">
+              가입 신청 후 관리자가 승인하면 Google 계정으로 로그인하여 글을 작성할 수 있습니다.
+            </p>
           </div>
 
           {status === "done" ? (

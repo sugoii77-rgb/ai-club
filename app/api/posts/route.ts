@@ -1,30 +1,116 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
+import { getMemberStatus } from "@/lib/notionMembers";
 
-// 게시판 API (구조만 준비된 상태).
-// 현재 게시판은 localStorage(브라우저별)로 동작합니다.
-// 모두가 함께 보는 게시판으로 바꾸려면 아래 TODO에 Supabase를 연결하고,
-// app/board/page.tsx 의 loadPosts/onSubmit 을 fetch("/api/posts")로
-// 교체하면 됩니다. 사진은 Supabase Storage 업로드를 권장합니다.
+const NOTION_VERSION = "2022-06-28";
 
-export async function GET() {
-  // TODO: const { data } = await supabase.from("posts").select() ...
-  return NextResponse.json({ posts: [] });
+export const dynamic = "force-dynamic";
+
+function getNotionHeaders(): Record<string, string> | null {
+  const apiKey = process.env.NOTION_API_KEY;
+  if (!apiKey) return null;
+  return {
+    Authorization: `Bearer ${apiKey}`,
+    "Content-Type": "application/json",
+    "Notion-Version": NOTION_VERSION,
+  };
 }
 
 export async function POST(req: NextRequest) {
-  let body: { title?: string; author?: string; content?: string; photo?: string };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ ok: false }, { status: 400 });
+  const session = await auth();
+  if (!session?.user?.email) {
+    return NextResponse.json({ ok: false, error: "Unauthorized" }, { status: 401 });
   }
-  if (!body.title || !body.content) {
+
+  const email = session.user.email;
+  const memberStatus = await getMemberStatus(email);
+  if (memberStatus !== "approved") {
+    return NextResponse.json(
+      { ok: false, error: "Not authorized to post" },
+      { status: 403 }
+    );
+  }
+
+  let body: { title?: string; content?: string };
+  try {
+    body = (await req.json()) as { title?: string; content?: string };
+  } catch {
+    return NextResponse.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const title = body.title?.trim() ?? "";
+  const content = body.content?.trim() ?? "";
+  if (!title || !content) {
     return NextResponse.json(
       { ok: false, error: "title and content required" },
       { status: 400 }
     );
   }
-  // TODO: await supabase.from("posts").insert({ ... })
-  console.log("[board post]", body.title);
-  return NextResponse.json({ ok: true });
+
+  const dbId = process.env.NOTION_POSTS_DATABASE_ID;
+  if (!dbId) {
+    return NextResponse.json(
+      { ok: false, error: "Posts database not configured" },
+      { status: 500 }
+    );
+  }
+
+  const headers = getNotionHeaders();
+  if (!headers) {
+    return NextResponse.json(
+      { ok: false, error: "API not configured" },
+      { status: 500 }
+    );
+  }
+
+  try {
+    const response = await fetch("https://api.notion.com/v1/pages", {
+      method: "POST",
+      headers,
+      cache: "no-store",
+      body: JSON.stringify({
+        parent: { database_id: dbId },
+        properties: {
+          Title: {
+            title: [{ text: { content: title } }],
+          },
+          Content: {
+            rich_text: [{ text: { content: content } }],
+          },
+          AuthorName: {
+            rich_text: [{ text: { content: session.user.name ?? "" } }],
+          },
+          AuthorEmail: {
+            email: email,
+          },
+          MemberStatus: {
+            select: { name: "approved" },
+          },
+          PostStatus: {
+            select: { name: "pending" },
+          },
+          CreatedAt: {
+            date: { start: new Date().toISOString() },
+          },
+          Source: {
+            rich_text: [{ text: { content: "website" } }],
+          },
+        },
+      }),
+    });
+
+    if (!response.ok) {
+      return NextResponse.json(
+        { ok: false, error: "Failed to save post" },
+        { status: 500 }
+      );
+    }
+
+    return NextResponse.json({ ok: true });
+  } catch {
+    return NextResponse.json(
+      { ok: false, error: "Failed to save post" },
+      { status: 500 }
+    );
+  }
 }

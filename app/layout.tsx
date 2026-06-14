@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Providers from "./Providers";
 
 export const metadata: Metadata = {
   title: "FCM 영천 AI 탐험대 — AI를 배우는 사람들의 실험실",
@@ -12,7 +13,9 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko">
-      <body className="min-h-screen bg-night antialiased">{children}</body>
+      <body className="min-h-screen bg-night antialiased">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
