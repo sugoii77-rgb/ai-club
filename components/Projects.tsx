@@ -21,7 +21,7 @@ const projects: Project[] = [
   },
   {
     title: "Vercel 웹앱 배포",
-    desc: "Vibe Coding 입문 가이드체럼 만든 앱을 GitHub→Vercel로 바로 세상에 공개합니다.",
+    desc: "Vibe Coding 입문 가이드처럼 만든 앱을 GitHub→Vercel로 바로 세상에 공개합니다.",
     stack: ["Next.js", "Vercel"],
     gradient: "from-fuchsia-500/30 to-sky-500/10",
   },
@@ -54,7 +54,7 @@ const projects: Project[] = [
   },
   {
     title: "💑 영어 레스토랑 부부 대화 (중급)",
-    desc: "부부가 함께 영어 레스토랑에서 나누는 자연스러운 대화. 셠도잉 연습에 최적화.",
+    desc: "부부가 함께 영어 레스토랑에서 나누는 자연스러운 대화. 세도잉 연습에 최적화.",
     stack: ["TTS", "Vanilla JS", "Vercel"],
     gradient: "from-pink-500/30 to-rose-500/10",
     url: "https://english-restaurant-dialogue.vercel.app",
