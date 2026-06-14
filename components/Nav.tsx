@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { signInWithGoogle } from "@/app/actions";
 
 export default function Nav() {
   const { data: session, status } = useSession();
@@ -42,14 +41,12 @@ export default function Nav() {
               로그아웃
             </button>
           ) : (
-            <form action={signInWithGoogle}>
-              <button
-                type="submit"
-                className="text-xs text-slate-300 transition-colors hover:text-white"
-              >
-                로그인
-              </button>
-            </form>
+            <a
+              href="/api/auth/signin/google"
+              className="text-xs text-slate-300 transition-colors hover:text-white"
+            >
+              로그인
+            </a>
           )}
           <Link href="/#join" className="btn-primary !px-4 !py-2 text-xs">
             가입하기
