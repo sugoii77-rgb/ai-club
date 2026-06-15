@@ -1,17 +1,20 @@
+// env: GMAIL_USER, GMAIL_APP_PASSWORD, ADMIN_EMAIL required
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { getApprovedPendingEmail, markEmailSent } from "@/lib/notionEmail";
+import nodemailer from "nodemailer";
 
 export const dynamic = "force-dynamic";
 
-async function sendApprovalEmail(
-  name: string,
-  email: string
-): Promise<boolean> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const from = process.env.EMAIL_FROM ?? "onboarding@resend.dev";
-  if (!apiKey) return false;
+async function sendApprovalEmail(name: string, email: string): Promise<boolean> {
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
+  if (!gmailUser || !gmailPass) return false;
   try {
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: { user: gmailUser, pass: gmailPass },
+    });
     const body = [
       "안녕하세요, " + name + "님.",
       "",
@@ -25,20 +28,13 @@ async function sendApprovalEmail(
       "감사합니다.",
       "FCM 영천 AI 탐험대",
     ].join("\n");
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + apiKey,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from,
-        to: [email],
-        subject: "FCM 영천 AI 탐험대 가입이 승인되었습니다",
-        text: body,
-      }),
+    await transporter.sendMail({
+      from: "FCM 영천 AI 탐험대 <" + gmailUser + ">",
+      to: email,
+      subject: "FCM 영천 AI 탐험대 가입이 승인되었습니다",
+      text: body,
     });
-    return response.ok;
+    return true;
   } catch {
     return false;
   }
