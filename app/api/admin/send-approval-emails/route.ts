@@ -1,3 +1,4 @@
+// env: RESEND_API_KEY, ADMIN_EMAIL required
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { getApprovedPendingEmail, markEmailSent } from "@/lib/notionEmail";
