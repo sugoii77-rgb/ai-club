@@ -61,13 +61,13 @@ export default async function BannerSection() {
             <h3 className="mt-1 text-base font-bold text-white">스페인 레게톤 — AI로 만든 신나는 뮤비 🎵</h3>
           </div>
           <div className="flex-1 flex items-center justify-center p-4">
-            <div className="w-full rounded-2xl overflow-hidden" style={{aspectRatio: "9/16", maxHeight: "370px", maxWidth: "210px", margin: "0 auto"}}>
+            <div className="w-full rounded-2xl overflow-hidden" style={{position: "relative", paddingBottom: "56.25%", height: 0}}>
               <iframe
-                src="https://www.youtube.com/embed/Ohj-6LD9Spk"
+                src="https://www.youtube.com/embed/DIw4AEnyX74"
                 title="AI 제작 스페인 레게톤 뮤직비디오"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                style={{width: "100%", height: "100%", border: "none"}}
+                style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none"}}
               />
             </div>
           </div>
