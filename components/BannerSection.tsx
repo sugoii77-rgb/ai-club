@@ -63,7 +63,7 @@ export default async function BannerSection() {
           <div className="flex-1 flex items-center justify-center p-4">
             <div className="w-full rounded-2xl overflow-hidden" style={{position: "relative", paddingBottom: "56.25%", height: 0}}>
               <iframe
-                src="https://www.youtube.com/embed/DIw4AEnyX74"
+                src="https://www.youtube.com/embed/HKb68QsXVTk"
                 title="AI 제작 스페인 레게톤 뮤직비디오"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
