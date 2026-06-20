@@ -54,22 +54,21 @@ export default async function BannerSection() {
           )}
         </div>
 
-        {/* AI 뮤직비디오 */}
+        {/* 스페인어 공부 앱 */}
         <div className="glass relative overflow-hidden rounded-3xl flex-1 flex flex-col">
           <div className="px-6 pt-5 pb-3 border-b border-white/5">
-            <p className="text-xs font-semibold tracking-widest uppercase text-indigo-400">AI 제작 뮤직비디오</p>
-            <h3 className="mt-1 text-base font-bold text-white">스페인 레게톤 — AI로 만든 신나는 뮤비 🎵</h3>
+            <p className="text-xs font-semibold tracking-widest uppercase text-indigo-400">AI 제작 스페인어 학습</p>
+            <h3 className="mt-1 text-base font-bold text-white">레게톤 뮤비 보며 스페인어 공부 하기 🇪🇸</h3>
           </div>
-          <div className="flex-1 flex items-center justify-center p-4">
-            <div className="w-full rounded-2xl overflow-hidden" style={{position: "relative", paddingBottom: "56.25%", height: 0}}>
-              <iframe
-                src="https://www.youtube.com/embed/HKb68QsXVTk"
-                title="AI 제작 스페인 레게톤 뮤직비디오"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none"}}
-              />
-            </div>
+          <div className="flex-1 p-0 min-h-[380px] md:min-h-[420px]">
+            <iframe
+              src="https://spanish-mv-study.vercel.app/"
+              title="스페인 레게톤 뮤비와 함께 스페인어 학습"
+              className="w-full h-full min-h-[380px] md:min-h-[420px]"
+              style={{border: "none"}}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
           </div>
         </div>
       </div>
