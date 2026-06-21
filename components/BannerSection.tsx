@@ -1,4 +1,25 @@
 import Image from "next/image";
+import fs from "fs/promises";
+import path from "path";
+
+interface BannerData {
+  image_url: string;
+  description: string;
+}
+
+async function getBannerData(): Promise<BannerData | null> {
+  try {
+    const filePath = path.join(process.cwd(), "public", "data", "banner.json");
+    const fileContents = await fs.readFile(filePath, "utf8");
+    const data: BannerData = JSON.parse(fileContents);
+    return data;
+  } catch (error) {
+    console.error("Failed to read banner data:", error);
+    return null;
+  }
+}
+
+export default async function BannerSection() {
   const bannerData = await getBannerData();
 
 
@@ -76,4 +97,5 @@ import Image from "next/image";
       </div>
     </section>
   );
+}
 }
