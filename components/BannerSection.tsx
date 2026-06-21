@@ -22,17 +22,16 @@ async function getBannerData(): Promise<BannerData | null> {
 export default async function BannerSection() {
   const bannerData = await getBannerData();
 
-
   if (!bannerData) {
     return null;
   }
-
 
   return (
     <section className="mx-auto max-w-6xl px-6 pb-12 space-y-6">
       {/* Row 1: 포스터 + 스페인어 공부 앱 */}
       <div className="flex flex-col md:flex-row gap-6">
         <div className="glass relative overflow-hidden rounded-3xl flex-1">
+          <div className="relative h-64 w-full overflow-hidden md:h-[420px]">
             <Image
               src={bannerData.image_url}
               alt="AI Club 포스터"
@@ -55,7 +54,6 @@ export default async function BannerSection() {
           )}
         </div>
 
-
         <div className="glass relative overflow-hidden rounded-3xl flex-1 flex flex-col">
           <div className="px-6 pt-5 pb-3 border-b border-white/5">
             <p className="text-xs font-semibold tracking-widest uppercase text-indigo-400">AI 제작 스페인어 학습</p>
@@ -73,7 +71,6 @@ export default async function BannerSection() {
           </div>
         </div>
       </div>
-
 
       {/* Row 2: 조선 힙합 AI 뮤직비디오 */}
       <div className="glass relative overflow-hidden rounded-3xl">
@@ -96,4 +93,4 @@ export default async function BannerSection() {
       </div>
     </section>
   );
-}
+            }
