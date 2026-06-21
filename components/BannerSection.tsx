@@ -27,9 +27,9 @@ export default async function BannerSection() {
   }
 
   return (
-    <section className="mx-auto max-w-6xl px-6 pb-12">
+    <section className="mx-auto max-w-6xl px-6 pb-12 space-y-6">
+      {/* Row 1: 포스터 + 스페인어 공부 앱 */}
       <div className="flex flex-col md:flex-row gap-6">
-        {/* 포스터 */}
         <div className="glass relative overflow-hidden rounded-3xl flex-1">
           <div className="relative h-64 w-full overflow-hidden md:h-[420px]">
             <Image
@@ -54,7 +54,6 @@ export default async function BannerSection() {
           )}
         </div>
 
-        {/* 스페인어 공부 앱 */}
         <div className="glass relative overflow-hidden rounded-3xl flex-1 flex flex-col">
           <div className="px-6 pt-5 pb-3 border-b border-white/5">
             <p className="text-xs font-semibold tracking-widest uppercase text-indigo-400">AI 제작 스페인어 학습</p>
@@ -68,6 +67,26 @@ export default async function BannerSection() {
               style={{border: "none"}}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Row 2: 조선 힍합 AI 뮤직비디오 */}
+      <div className="glass relative overflow-hidden rounded-3xl">
+        <div className="px-6 pt-5 pb-3 border-b border-white/5">
+          <p className="text-xs font-semibold tracking-widest uppercase text-purple-400">AI 제작 뮤직비디오</p>
+          <h3 className="mt-1 text-lg font-bold text-white">Moonlight Vows (달빛 가약 당스 버전) 🌙</h3>
+          <p className="mt-2 text-sm text-slate-400">조선 힍합 — 전통 국악의 애절한 감성과 트렌디한 EDM/프로그레시브 하우스 비트가 만난 본격 조선 일렉트로니카! 한밤중 폼쳐지는 신비롭고 청량한 야행의 분위기를 사운드와 비주얼로 함께 즐겨보세요.</p>
+        </div>
+        <div className="p-4">
+          <div className="w-full rounded-2xl overflow-hidden" style={{position: "relative", paddingBottom: "56.25%", height: 0}}>
+            <iframe
+              src="https://www.youtube.com/embed/ZOCZi9gUkas"
+              title="Moonlight Vows - 조선 힍합 AI 뮤직비디오"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%", border: "none"}}
             />
           </div>
         </div>
