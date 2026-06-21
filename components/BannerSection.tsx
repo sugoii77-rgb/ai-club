@@ -33,7 +33,6 @@ export default async function BannerSection() {
       {/* Row 1: 포스터 + 스페인어 공부 앱 */}
       <div className="flex flex-col md:flex-row gap-6">
         <div className="glass relative overflow-hidden rounded-3xl flex-1">
-          <div className="relative h-64 w-full overflow-hidden md:h-[420px]">
             <Image
               src={bannerData.image_url}
               alt="AI Club 포스터"
@@ -97,5 +96,4 @@ export default async function BannerSection() {
       </div>
     </section>
   );
-}
 }
